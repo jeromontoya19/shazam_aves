@@ -16,7 +16,7 @@ import numpy as np
 
 from . import descriptores, huellas
 from .audio import cargar, preprocesar
-from .config import MODELO, PESO_HUELLAS, VOTOS_MINIMOS
+from .config import MAX_SEGUNDOS, MODELO, NOMBRES_COMUNES, PESO_HUELLAS, VOTOS_MINIMOS
 from .espectro import energia_banda_db, marcos_activos, stft
 
 
@@ -29,6 +29,7 @@ class Modelo:
     clasificador: object        # motor B (None si hay menos de dos especies)
     conjunto: str               # "entrenamiento" o "todo"
     fragmentos: int
+    archivos: list              # nombres de los audios con que se entrenó
 
     def nombre(self, especie):
         comun = self.nombres.get(especie, "")
@@ -80,7 +81,7 @@ def combinar(p_a, p_b, peso=PESO_HUELLAS):
     return peso * p_a + (1 - peso) * p_b
 
 
-def entrenar(grabaciones, p, nombres=None, conjunto="entrenamiento", informar=print):
+def entrenar(grabaciones, p, conjunto="entrenamiento", informar=print):
     """grabaciones: lista de (especie, ruta). Construye la base de huellas con las
     grabaciones completas y entrena el clasificador con fragmentos de p.segmento_s."""
     base = huellas.BaseHuellas()
@@ -88,7 +89,7 @@ def entrenar(grabaciones, p, nombres=None, conjunto="entrenamiento", informar=pr
     largo, paso = p.marcos(1000 * p.segmento_s), p.marcos(1000 * p.salto_segmento_s)
 
     for especie, ruta in grabaciones:
-        X, _, f = stft(preprocesar(cargar(ruta, p), p), p)
+        X, _, f = stft(preprocesar(cargar(ruta, p, MAX_SEGUNDOS), p), p)
         picos = huellas.constelacion(X, f, p)
         lista = huellas.huellas(picos, p)
         base.agregar(especie, lista)
@@ -102,15 +103,15 @@ def entrenar(grabaciones, p, nombres=None, conjunto="entrenamiento", informar=pr
                 vectores.append(descriptores.vector(X[inicio:inicio + largo], activos, p))
                 etiquetas.append(especie)
                 n += 1
-        informar(f"  {Path(ruta).stem:12s} {especie:30s} {len(picos):6d} picos "
+        informar(f"  {especie:28s} {Path(ruta).stem[:38]:38s} {len(picos):6d} picos "
                  f"{len(lista):8d} huellas {n:4d} fragmentos")
 
     clasificador = None
     if len(set(etiquetas)) >= 2:
         clasificador = descriptores.nuevo_clasificador().fit(np.array(vectores), etiquetas)
-    return Modelo(p=p, especies=sorted(set(base.especie_de)), nombres=nombres or {},
+    return Modelo(p=p, especies=sorted(set(base.especie_de)), nombres=NOMBRES_COMUNES,
                   base=base, clasificador=clasificador, conjunto=conjunto,
-                  fragmentos=len(vectores))
+                  fragmentos=len(vectores), archivos=[Path(r).name for _, r in grabaciones])
 
 
 def reconocer(modelo, x):

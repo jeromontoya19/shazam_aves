@@ -73,7 +73,6 @@ def analizar(x, modelo, titulo, mostrar):
 
 
 def en_vivo(modelo, segundos, mostrar):
-    GRABACIONES.mkdir(parents=True, exist_ok=True)
     while True:
         try:
             orden = input(f"\nPulsa Enter para grabar {segundos} s (q + Enter para salir): ")
@@ -88,6 +87,7 @@ def en_vivo(modelo, segundos, mostrar):
             print(f"\nNo pude grabar del micrófono ({e}).")
             continue
         print("listo")
+        GRABACIONES.mkdir(parents=True, exist_ok=True)
         ruta = GRABACIONES / f"grabacion_{datetime.now():%Y-%m-%d_%H-%M-%S}.wav"
         sf.write(ruta, x, modelo.p.fs, subtype="PCM_16")
         analizar(x, modelo, f"Grabación en vivo ({ruta.name})", mostrar)

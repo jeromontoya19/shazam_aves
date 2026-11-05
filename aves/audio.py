@@ -4,14 +4,20 @@ La señal antes de Fourier: cargarla, grabarla y preprocesarla.
 Preprocesado = quitar la componente DC  ->  filtro pasa-banda Butterworth  ->  normalizar.
 """
 
+import sys
+
 import numpy as np
 import librosa
 from scipy import signal
 
 
-def cargar(ruta, p):
-    """Lee cualquier audio (wav, mp3, ...) en mono y a p.fs muestras por segundo."""
-    x, _ = librosa.load(ruta, sr=p.fs, mono=True)
+def cargar(ruta, p, duracion=None):
+    """Lee cualquier audio (wav, mp3, ...) en mono y a p.fs muestras por segundo.
+    Con `duracion` (en segundos) lee solo el comienzo de la grabación."""
+    try:
+        x, _ = librosa.load(ruta, sr=p.fs, mono=True, duration=duracion)
+    except Exception as e:
+        sys.exit(f"No pude leer {ruta}: {e}\nConviértelo a mp3 o wav, o sácalo de la carpeta.")
     return x.astype(np.float64)
 
 

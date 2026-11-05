@@ -1,31 +1,17 @@
 ﻿real,Huellas (A),MFCC (B),Combinado
-Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps
-Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps
-Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps,Drymophila striaticeps
-Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps
-Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis,Pheugopedius mystacalis
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Synallaxis albescens,Synallaxis albescens,Synallaxis albescens,Synallaxis albescens
-Thraupis episcopus,Thraupis episcopus,Thraupis episcopus,Thraupis episcopus
-Thraupis episcopus,Thraupis episcopus,Thraupis episcopus,Thraupis episcopus
-Thraupis episcopus,Thraupis episcopus,Thraupis episcopus,Thraupis episcopus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus,Tyrannus melancholicus
-Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis
-Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis
-Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis,Zonotrichia capensis
+Drymophila striaticeps,,Drymophila striaticeps,Drymophila striaticeps
+Drymophila striaticeps,,Zonotrichia capensis,Zonotrichia capensis
+Drymophila striaticeps,,Zonotrichia capensis,Zonotrichia capensis
+Grallaria nuchalis ruficeps,Pheugopedius mystacalis,Grallaria nuchalis ruficeps,Pheugopedius mystacalis
+Grallaria nuchalis ruficeps,,Grallaria nuchalis ruficeps,Grallaria nuchalis ruficeps
+Grallaria nuchalis ruficeps,,Synallaxis albescens,Synallaxis albescens
+Momotus aequatorialis,,Pheugopedius mystacalis,Pheugopedius mystacalis
+Momotus aequatorialis,,Tyrannus melancholicus,Tyrannus melancholicus
+Momotus aequatorialis,,Pheugopedius mystacalis,Pheugopedius mystacalis
+Thraupis episcopus,,Thraupis episcopus,Thraupis episcopus
+Thraupis episcopus,,Thraupis episcopus,Thraupis episcopus
+Thraupis episcopus,,Thraupis episcopus,Thraupis episcopus
+Thraupis episcopus,,Synallaxis albescens,Synallaxis albescens
+Thraupis episcopus,,Synallaxis albescens,Synallaxis albescens
+Zonotrichia capensis,,Zonotrichia capensis,Zonotrichia capensis
+Zonotrichia capensis,,Zonotrichia capensis,Zonotrichia capensis

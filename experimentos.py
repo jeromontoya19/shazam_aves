@@ -29,7 +29,7 @@ import numpy as np
 from aves import graficas
 from aves.audio import disenar_filtro, es_estable, prototipo_analogico
 from aves.config import RESULTADOS, SEGUNDOS_GRABACION, Parametros
-from aves.datos import fragmentos, grabaciones, leer_metadata, nombres_comunes, ruido_grabado
+from aves.datos import fragmentos, particion, ruido_grabado
 from aves.espectro import ventana
 from aves.evaluacion import MOTORES, evaluar, exactitudes
 from aves.modelo import entrenar
@@ -43,17 +43,17 @@ DURACIONES_S = (1, 2, 3, 5, 8, 10)
 # ------------------------------- Utilidades -------------------------------
 def datos(con_entrenamiento):
     """Grabaciones para entrenar y para evaluar."""
-    filas = leer_metadata()
-    entrenamiento = grabaciones(filas, "entrenamiento")
-    prueba = entrenamiento if con_entrenamiento else grabaciones(filas, "prueba")
+    entrenamiento, prueba = particion()
+    if con_entrenamiento:
+        prueba = entrenamiento
     if not prueba:
-        sys.exit("No hay grabaciones de prueba todavía. Agrega más grabaciones por especie y "
-                 "corre preparar_cantos.py, o usa --con-entrenamiento para probar el código.")
-    return entrenamiento, prueba, nombres_comunes(filas)
+        sys.exit("No hay grabaciones de prueba todavía. Agrega más grabaciones por especie en "
+                 "data/raw/, o usa --con-entrenamiento para probar el código.")
+    return entrenamiento, prueba
 
 
-def medir(entrenamiento, prueba, nombres, p, segundos=SEGUNDOS_GRABACION, **ruido):
-    modelo = entrenar(entrenamiento, p, nombres, informar=lambda *_: None)
+def medir(entrenamiento, prueba, p, segundos=SEGUNDOS_GRABACION, **ruido):
+    modelo = entrenar(entrenamiento, p, informar=lambda *_: None)
     clips = fragmentos(prueba, p, segundos)
     return exactitudes(evaluar(modelo, clips, **ruido)), len(clips)
 
@@ -114,13 +114,13 @@ def lobulo_lateral(db):
 
 
 def exp_ventana(con_entrenamiento):
-    entrenamiento, prueba, nombres = datos(con_entrenamiento)
+    entrenamiento, prueba = datos(con_entrenamiento)
     filas = []
     for n in TAMANOS_N:
         p = replace(Parametros(), n_ventana=n, salto=n // 4)
         print(f"  N = {n:5d}: {1000 * n / p.fs:6.1f} ms por ventana, "
               f"resolución {p.resolucion_hz:6.1f} Hz ...", flush=True)
-        valores, clips = medir(entrenamiento, prueba, nombres, p)
+        valores, clips = medir(entrenamiento, prueba, p)
         filas.append((str(n), valores, clips))
     tabla("N", filas)
     graficas.lineas(list(TAMANOS_N), series(filas), "Tamaño de ventana N (muestras)",
@@ -130,11 +130,11 @@ def exp_ventana(con_entrenamiento):
 
 
 def exp_ventanas(con_entrenamiento):
-    entrenamiento, prueba, nombres = datos(con_entrenamiento)
+    entrenamiento, prueba = datos(con_entrenamiento)
     filas = []
     for nombre in VENTANAS:
         print(f"  ventana {nombre} ...", flush=True)
-        valores, clips = medir(entrenamiento, prueba, nombres, replace(Parametros(), ventana=nombre))
+        valores, clips = medir(entrenamiento, prueba, replace(Parametros(), ventana=nombre))
         filas.append((nombre, valores, clips))
     tabla("ventana", filas)
     graficas.lineas(list(range(len(VENTANAS))), series(filas), "Ventana",
@@ -144,11 +144,11 @@ def exp_ventanas(con_entrenamiento):
 
 
 def exp_ruido(con_entrenamiento):
-    entrenamiento, prueba, nombres = datos(con_entrenamiento)
+    entrenamiento, prueba = datos(con_entrenamiento)
     p = Parametros()
     ruido = ruido_grabado(p)
     print(f"  Ruido: {'grabado (data/ruido/)' if ruido is not None else 'blanco gaussiano'}")
-    modelo = entrenar(entrenamiento, p, nombres, informar=lambda *_: None)
+    modelo = entrenar(entrenamiento, p, informar=lambda *_: None)
     clips = fragmentos(prueba, p, SEGUNDOS_GRABACION)
     filas = []
     for snr in SNR_DB:
@@ -164,9 +164,9 @@ def exp_ruido(con_entrenamiento):
 
 
 def exp_duracion(con_entrenamiento):
-    entrenamiento, prueba, nombres = datos(con_entrenamiento)
+    entrenamiento, prueba = datos(con_entrenamiento)
     p = Parametros()
-    modelo = entrenar(entrenamiento, p, nombres, informar=lambda *_: None)
+    modelo = entrenar(entrenamiento, p, informar=lambda *_: None)
     filas = []
     for s in DURACIONES_S:
         print(f"  fragmentos de {s} s ...", flush=True)

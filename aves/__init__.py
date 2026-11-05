@@ -7,6 +7,6 @@ Reconocedor de cantos de aves con análisis de Fourier.
   huellas      motor A: constelación, huellas hash y votación (tipo Shazam)
   descriptores motor B: MFCC y clasificador
   modelo       entrenar, guardar, cargar y reconocer con los dos motores
-  datos        lectura de data/metadata.csv y fragmentos para evaluar
+  datos        audios de data/raw, partición y fragmentos para evaluar
   graficas     figuras del reconocimiento, la evaluación y los experimentos
 """

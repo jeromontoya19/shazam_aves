@@ -21,7 +21,7 @@ from collections import defaultdict
 
 from aves import graficas
 from aves.config import PESO_HUELLAS, RESULTADOS, SEGUNDOS_GRABACION
-from aves.datos import fragmentos, grabaciones, leer_metadata
+from aves.datos import fragmentos, particion
 from aves.evaluacion import (MOTORES, exactitud, exactitud_por_peso, exactitudes,
                              matriz_confusion, evaluar)
 from aves.modelo import cargar_modelo
@@ -37,12 +37,19 @@ def main():
               "también conoce las de prueba y la exactitud saldrá inflada. Para evaluar de\n"
               "verdad, corre antes:  python entrenar.py")
 
-    lista = grabaciones(leer_metadata(), conjunto)
+    de_entrenamiento, de_prueba = particion()
+    # Si los audios cambiaron, cambió la partición: el modelo podría conocer los de "prueba"
+    conocidos = de_entrenamiento + de_prueba if modelo.conjunto == "todo" else de_entrenamiento
+    if modelo.archivos != [ruta.name for _, ruta in conocidos]:
+        sys.exit("Los audios de data/raw/ cambiaron desde el último entrenamiento. "
+                 "Corre primero:  python entrenar.py")
+
+    lista = de_entrenamiento if conjunto == "entrenamiento" else de_prueba
     clips = fragmentos(lista, modelo.p, SEGUNDOS_GRABACION)
     if not clips:
         sys.exit(f"No hay fragmentos de {SEGUNDOS_GRABACION} s con canto en el conjunto de {conjunto}."
-                 + ("\nCuando haya más grabaciones por especie, preparar_cantos.py llenará el de "
-                    "prueba. Mientras tanto:  python evaluar.py entrenamiento" if conjunto == "prueba" else ""))
+                 + ("\nCada especie necesita al menos 2 grabaciones para tener audio de prueba. "
+                    "Mientras tanto:  python evaluar.py entrenamiento" if conjunto == "prueba" else ""))
 
     print(f"Evaluando {len(clips)} fragmentos de {SEGUNDOS_GRABACION} s "
           f"({len(lista)} grabaciones de {conjunto})...")

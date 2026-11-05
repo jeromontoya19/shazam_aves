@@ -1,13 +1,12 @@
 """
 entrenar.py
-Construye el modelo a partir de las grabaciones de data/metadata.csv:
+Construye el modelo a partir de los audios de data/raw/<Genero_especie>/:
   - Motor A: la base de huellas (constelación + hash) de cada grabación completa.
   - Motor B: el clasificador con los MFCC de fragmentos de 5 s con canto.
 Guarda todo en modelos/modelo.pkl.
 
-Para agregar datos: pon los audios en data/raw/<Genero_especie>/ y corre
-    python preparar_cantos.py
-    python entrenar.py
+Para agregar datos: pon los audios en la carpeta de su especie (o crea una carpeta
+nueva con el nombre Genero_especie) y vuelve a correr este programa.
 
 Uso:
     python entrenar.py          -> solo con el conjunto de entrenamiento (para poder evaluar)
@@ -23,16 +22,16 @@ import time
 
 from aves.audio import disenar_filtro, es_estable
 from aves.config import MODELO, Parametros
-from aves.datos import grabaciones, leer_metadata, nombres_comunes
+from aves.datos import particion
 from aves.modelo import entrenar, guardar
 
 
 def main():
     conjunto = "todo" if len(sys.argv) > 1 and sys.argv[1] == "todo" else "entrenamiento"
-    filas = leer_metadata()
-    lista = grabaciones(filas, None if conjunto == "todo" else "entrenamiento")
+    de_entrenamiento, de_prueba = particion()
+    lista = de_entrenamiento + de_prueba if conjunto == "todo" else de_entrenamiento
     if not lista:
-        sys.exit("No hay grabaciones de entrenamiento en data/metadata.csv.")
+        sys.exit("No encontré audios. Ponlos en data/raw/<Genero_especie>/.")
 
     p = Parametros()
     print(f"Filtro Butterworth {p.f_min:.0f}-{p.f_max:.0f} Hz, orden {p.orden_filtro}: "
@@ -42,13 +41,18 @@ def main():
     print(f"\nEntrenando con {len(lista)} grabaciones ({conjunto}):\n")
 
     inicio = time.time()
-    modelo = entrenar(lista, p, nombres_comunes(filas), conjunto)
+    modelo = entrenar(lista, p, conjunto)
     guardar(modelo)
 
     print(f"\nListo en {time.time() - inicio:.0f} s: {len(modelo.especies)} especies, "
           f"{len(modelo.base):,} huellas, {modelo.fragmentos} fragmentos para el clasificador.")
     if modelo.clasificador is None:
         print("AVISO: el motor B necesita al menos dos especies con canto; solo se usará el A.")
+    if conjunto != "todo":
+        print(f"Quedan {len(de_prueba)} grabaciones para probar.")
+        sin_prueba = sorted({e for e, _ in de_entrenamiento} - {e for e, _ in de_prueba})
+        if sin_prueba:
+            print(f"AVISO: sin audio de prueba (necesitan 2 grabaciones o más): {', '.join(sin_prueba)}")
     print(f"Modelo guardado en {MODELO.relative_to(MODELO.parent.parent).as_posix()}")
     print("Siguiente:  python reconocer.py   o   python evaluar.py")
 

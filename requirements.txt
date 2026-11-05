@@ -2,8 +2,6 @@ numpy
 scipy
 librosa
 soundfile
-mutagen
-requests
 matplotlib
 scikit-learn
 sounddevice

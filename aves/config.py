@@ -9,11 +9,30 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 DATA = BASE / "data"
-METADATA = DATA / "metadata.csv"
+RAW = DATA / "raw"                     # los audios, en data/raw/<Genero_especie>/
 RUIDO = DATA / "ruido"                 # opcional: grabaciones de ruido ambiente para los experimentos
 MODELO = BASE / "modelos" / "modelo.pkl"
 GRABACIONES = BASE / "grabaciones"     # aquí se guarda cada grabación en vivo
 RESULTADOS = BASE / "resultados"       # gráficas y tablas de evaluar.py y experimentos.py
+
+# Audios de data/raw
+EXTENSIONES = {".mp3", ".mpeg", ".wav", ".flac", ".ogg", ".opus", ".aif", ".aiff"}
+MAX_SEGUNDOS = 60                 # de cada grabación solo se usa este tramo inicial
+FRACCION_ENTRENAMIENTO = 0.6      # de 8 grabaciones: 5 para la base, 3 para probar
+SEMILLA = 42                      # para que la partición sea siempre la misma
+
+# Una especie que no esté aquí se muestra con su nombre científico (el de su carpeta)
+NOMBRES_COMUNES = {
+    "Drymophila striaticeps": "Tiluchí colilargo",
+    "Grallaria nuchalis ruficeps": "Tororoí nuquicastaño",
+    "Momotus aequatorialis": "Barranquero",
+    "Myiothlypis nigrocristata": "Reinita crestinegra",
+    "Pheugopedius mystacalis": "Cucarachero bigotudo",
+    "Synallaxis albescens": "Pijuí pechiblanco",
+    "Thraupis episcopus": "Azulejo",
+    "Tyrannus melancholicus": "Sirirí",
+    "Zonotrichia capensis": "Copetón",
+}
 
 # Reconocimiento (no cambian el modelo entrenado)
 SEGUNDOS_GRABACION = 8
