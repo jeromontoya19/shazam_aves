@@ -1,0 +1,9 @@
+# Librerías necesarias para el proyecto (Python 3.11 o superior)
+# Instalar con:  pip install -r requirements.txt
+
+numpy>=1.26        # cálculos con arreglos y la STFT
+scipy>=1.11        # filtro Butterworth pasabanda (butter, sosfiltfilt, sosfreqz)
+librosa>=0.10      # leer los audios mp3/wav y remuestrear
+soundfile>=0.12    # lo usa librosa para abrir los archivos de audio
+matplotlib>=3.8    # gráficas (espectrogramas, filtro, tamaño de ventana)
+sounddevice>=0.4   # grabar con el micrófono en main.py
